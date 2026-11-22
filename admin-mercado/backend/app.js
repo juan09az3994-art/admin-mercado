@@ -1,7 +1,8 @@
+// dotenv va primero para que config/db.js ya encuentre las variables de .env
+require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const db = require("./config/db");
-require("dotenv").config();
 
 const app = express();
 

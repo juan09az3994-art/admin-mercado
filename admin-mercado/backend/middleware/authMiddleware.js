@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 
-const SECRET = "mercado_secret_key";
+const SECRET = require("../config/jwt");
 
 const verifyToken = (req, res, next) => {
     const token = req.headers["authorization"];

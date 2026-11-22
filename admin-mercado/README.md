@@ -13,56 +13,21 @@ Sistema de gestión para un mercado municipal, con dos paneles independientes: u
 
 ---
 
-## Estructura del proyecto
-
-```
-admin-mercado/
-├── backend/
-│   ├── app.js
-│   ├── config/
-│   │   └── db.js
-│   ├── controllers/
-│   │   ├── loginController.js
-│   │   ├── pagosController.js
-│   │   ├── incidenciasController.js
-│   │   ├── avisosController.js
-│   │   ├── administradoresController.js
-│   │   └── locatarioController.js
-│   ├── routes/
-│   │   ├── pagos.js
-│   │   ├── incidenciasRoutes.js
-│   │   ├── avisosRoutes.js
-│   │   ├── administradoresRoutes.js
-│   │   └── locatarioRoutes.js
-│   └── middleware/
-│       └── authMiddleware.js        (existe, aún no está en uso)
-│
-└── frontend/
-    └── src/
-        ├── components/
-        │   └── Navbar.jsx            (navbar del admin)
-        ├── pages/
-        │   ├── Login.jsx
-        │   ├── RegistrarUsuario.jsx
-        │   ├── Dashboard.jsx
-        │   ├── GestionLocatarios.jsx
-        │   ├── GestionPuestos.jsx
-        │   ├── GestionPagos.jsx
-        │   ├── Incidencias.jsx
-        │   ├── GestionAdmin.jsx (Administradores.jsx)
-        │   ├── LocatarioLayout.jsx
-        │   ├── LocatarioNavbar.jsx
-        │   ├── LocatarioInicio.jsx
-        │   ├── MisPagos.jsx
-        │   └── MisIncidencias.jsx
-        └── App.jsx
-```
-
----
-
 ## Base de datos
 
-Corre el scripts SQL 
+Ejecuta backend/dbMercado.sql en MySQL 8. Crea la base db_merc con 6 tablas y 38 procedimientos almacenados, y carga 5 usuarios de prueba. El administrador de prueba es carlos@mercado.com con contraseña admin123.
+
+## Variables de entorno
+
+El backend lee su configuración de backend/.env, que no se sube al repositorio. Copia la plantilla y llénala:
+
+```bash
+cd backend
+cp .env.example .env
+```
+
+JWT_SECRET es obligatoria y el servidor no arranca sin ella. Las variables de Twilio solo se necesitan para los recordatorios de pago.
+
 ---
 
 ## Backend
@@ -75,7 +40,7 @@ npm install
 npm run dev
 ```
 
-Por defecto corre en `${API_URL}`.
+Por defecto corre en el puerto 3000. El frontend toma la dirección del backend de la variable VITE_API_URL.
 
 ### Endpoints principales
 

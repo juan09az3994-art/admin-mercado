@@ -1,7 +1,7 @@
 const db = require("../config/db");
 const jwt = require("jsonwebtoken");
 
-const SECRET = "mercado_secret_key";
+const SECRET = require("../config/jwt");
 
 exports.login = async (req, res) => {
     const { correo, password } = req.body;
