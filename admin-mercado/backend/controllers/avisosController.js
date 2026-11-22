@@ -14,7 +14,8 @@ exports.listarAvisos = async (req, res) => {
 // PUBLICAR UN NUEVO AVISO
 exports.publicarAviso = async (req, res) => {
   try {
-    const { id_administrador, titulo, contenido, fecha_vigencia } = req.body;
+    const { titulo, contenido, fecha_vigencia } = req.body;
+    const id_administrador = req.user.id; // el autor sale del token
  
     if (!id_administrador || !titulo || !contenido || !fecha_vigencia) {
       return res.status(400).json({

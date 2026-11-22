@@ -31,6 +31,11 @@ app.get("/test-db", async (req, res) => {
 
 
 // rutas
+// Públicas: login y registro. Todo lo demás pide token y el rol correcto.
+const { verifyToken, soloRol, soloRolSiModifica } = require("./middleware/authMiddleware");
+const soloAdmin = [verifyToken, soloRol("administrador")];
+const soloLocatario = [verifyToken, soloRol("locatario")];
+
 const authRoutes = require("./routes/auth");
 app.use("/api", authRoutes);
 
@@ -38,32 +43,33 @@ const registroRoutes = require("./routes/registro");
 app.use("/api/registro", registroRoutes);
 
 const pagosRoutes = require("./routes/pagos");
-app.use("/api/pagos", pagosRoutes);
+app.use("/api/pagos", soloAdmin, pagosRoutes);
 
 const usuariosRoutes = require("./routes/usuarios");
-app.use("/api/usuarios", usuariosRoutes);
+app.use("/api/usuarios", soloAdmin, usuariosRoutes);
 
 const puestosRoutes = require("./routes/puestos");
-app.use("/api/puestos", puestosRoutes);
+app.use("/api/puestos", soloAdmin, puestosRoutes);
 
 
 const incidenciasRoutes = require("./routes/incidencias");
-app.use("/api/incidencias", incidenciasRoutes);
+app.use("/api/incidencias", soloAdmin, incidenciasRoutes);
 
 const avisosRoutes = require("./routes/avisos");
-app.use("/api/avisos", avisosRoutes);
+// Los avisos los leen ambos roles, pero solo el administrador los publica, edita o archiva
+app.use("/api/avisos", verifyToken, soloRolSiModifica("administrador"), avisosRoutes);
 
 const administradoresRoutes = require("./routes/admin");
-app.use("/api/administradores", administradoresRoutes);
+app.use("/api/administradores", soloAdmin, administradoresRoutes);
 
 const locatarioRoutes = require("./routes/locatario");
-app.use("/api/locatario", locatarioRoutes);
+app.use("/api/locatario", soloLocatario, locatarioRoutes);
 
 const dashboardRoutes = require("./routes/dashboard");
-app.use("/api/dashboard", dashboardRoutes);
+app.use("/api/dashboard", soloAdmin, dashboardRoutes);
 
 const smsRoutes = require("./routes/sms"); 
-app.use("/api/pagos", smsRoutes);
+app.use("/api/pagos", soloAdmin, smsRoutes);
 
 //--------------------
 

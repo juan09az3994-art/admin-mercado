@@ -9,7 +9,7 @@ Sistema de gestión para un mercado municipal, con dos paneles independientes: u
 - **Base de datos:** MySQL (procedimientos almacenados para toda la lógica de negocio)
 - **Autenticación:** JWT (login), sesión guardada en `localStorage`
 
-> ⚠️ **Nota de seguridad:** por ahora no hay protección de rutas por rol (`ProtectedRoute`) ni verificación de JWT en los endpoints — cualquiera con la URL puede entrar a cualquier pantalla, y los endpoints de locatario reciben el `id_locatario` como parámetro sin validarlo contra el token. Esto se dejó pendiente a propósito para priorizar funcionalidad; **antes de un despliegue real hay que resolverlo** (ver sección "Pendientes").
+Seguridad: el login y el registro son las únicas rutas públicas del backend. Las demás piden el token en el encabezado Authorization y revisan el rol: las de /api/locatario solo aceptan locatarios y toman el id del token, y las de gestión solo aceptan administradores. El frontend agrega el token a cada petición desde src/authFetch.js y regresa al login si el token vence (dura 2 horas).
 
 ---
 
@@ -143,7 +143,7 @@ El login redirige según el `rol` que regresa el backend: `administrador` → `/
 
 ## Pendientes / mejoras futuras
 
-- **Protección de rutas por rol** (`ProtectedRoute`) para que un locatario no pueda entrar a `/pagos` o `/administradores` cambiando la URL, y viceversa.
-- **Verificar JWT en el backend** (ya existe `authMiddleware.js`, falta aplicarlo a las rutas) en vez de confiar en el `id_locatario`/`id_administrador` que manda el frontend.
+- **Protección de rutas por rol en el frontend** (`ProtectedRoute`). El backend ya rechaza al rol equivocado, pero la pantalla todavía se dibuja vacía si un locatario escribe `/pagos` en la URL.
+- **Contraseñas cifradas.** Se guardan en texto plano; bcrypt ya está en las dependencias pero no se usa.
 - **PDF real desde el backend** (actualmente el comprobante se genera con el diálogo de impresión del navegador, no como archivo descargable generado en servidor).
 - **Notificaciones en tiempo real** conectadas de verdad a la campanita del Navbar del admin (endpoint `/api/incidencias/abiertas` ya existe, falta conectarlo ahí).

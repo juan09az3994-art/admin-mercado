@@ -4,7 +4,7 @@ const { getIO } = require("../socket");
 // INFO BÁSICA DEL LOCATARIO LOGUEADO
 exports.miInfo = async (req, res) => {
   try {
-    const { id_locatario } = req.query;
+    const id_locatario = req.user.id;
     if (!id_locatario) return res.status(400).json({ error: "Falta id_locatario" });
 
     const [rows] = await db.query("CALL sp_mi_info_locatario(?)", [id_locatario]);
@@ -17,7 +17,7 @@ exports.miInfo = async (req, res) => {
 // HISTORIAL DE PAGOS DEL LOCATARIO LOGUEADO
 exports.misPagos = async (req, res) => {
   try {
-    const { id_locatario } = req.query;
+    const id_locatario = req.user.id;
     if (!id_locatario) return res.status(400).json({ error: "Falta id_locatario" });
 
     const [rows] = await db.query("CALL sp_listar_mis_pagos(?)", [id_locatario]);
@@ -30,7 +30,8 @@ exports.misPagos = async (req, res) => {
 // EL LOCATARIO REGISTRA SU PROPIO PAGO (elige mes y tipo de pago)
 exports.pagar = async (req, res) => {
   try {
-    const { id_locatario, mes, anio, tipo_pago } = req.body;
+    const { mes, anio, tipo_pago } = req.body;
+    const id_locatario = req.user.id;
 
     if (!id_locatario || !mes || !anio || !tipo_pago) {
       return res.status(400).json({ error: "Faltan datos: id_locatario, mes, anio y tipo_pago son obligatorios" });
@@ -46,7 +47,8 @@ exports.pagar = async (req, res) => {
 // EL LOCATARIO EDITA SU GIRO COMERCIAL Y SUS DATOS DE CONTACTO
 exports.editarMiPerfil = async (req, res) => {
   try {
-    const { id_locatario, telefono, correo, giro_comercial } = req.body;
+    const { telefono, correo, giro_comercial } = req.body;
+    const id_locatario = req.user.id;
 
     if (!id_locatario || !correo || !correo.trim() || !giro_comercial || !giro_comercial.trim()) {
       return res.status(400).json({ error: "Faltan datos: correo y giro comercial son obligatorios" });
@@ -68,7 +70,7 @@ exports.editarMiPerfil = async (req, res) => {
 // INCIDENCIAS DEL LOCATARIO LOGUEADO
 exports.misIncidencias = async (req, res) => {
   try {
-    const { id_locatario } = req.query;
+    const id_locatario = req.user.id;
     if (!id_locatario) return res.status(400).json({ error: "Falta id_locatario" });
 
     const [rows] = await db.query("CALL sp_listar_mis_incidencias(?)", [id_locatario]);
@@ -81,7 +83,8 @@ exports.misIncidencias = async (req, res) => {
 // EL LOCATARIO REPORTA UNA NUEVA INCIDENCIA
 exports.crearIncidencia = async (req, res) => {
   try {
-    const { id_locatario, titulo, descripcion, foto_url } = req.body;
+    const { titulo, descripcion, foto_url } = req.body;
+    const id_locatario = req.user.id;
  
     if (!id_locatario || !titulo || !descripcion) {
       return res.status(400).json({ error: "Faltan datos: titulo y descripcion son obligatorios" });
